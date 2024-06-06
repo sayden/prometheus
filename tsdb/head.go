@@ -925,6 +925,7 @@ func (h *Head) loadMmappedChunks(refSeries map[chunks.HeadSeriesRef]*memSeries) 
 			// Hence remove this chunk.
 			ms.nextAt = 0
 			ms.headChunks = nil
+			ms.headChunksLength = 0
 			ms.app = nil
 		}
 		return nil
@@ -2085,8 +2086,10 @@ type memSeries struct {
 	// Most recent chunks in memory that are still being built or waiting to be mmapped.
 	// This is a linked list, headChunks points to the most recent chunk, headChunks.next points
 	// to older chunk and so on.
-	headChunks   *memChunk
-	firstChunkID chunks.HeadChunkID // HeadChunkID for mmappedChunks[0]
+	headChunks       *memChunk
+	headChunksLength int
+	oldestHeadChunk  *memChunk
+	firstChunkID     chunks.HeadChunkID // HeadChunkID for mmappedChunks[0]
 
 	ooo *memSeriesOOOFields
 
@@ -2167,20 +2170,23 @@ func (s *memSeries) truncateChunksBefore(mint int64, minOOOMmapRef chunks.ChunkD
 		for chk != nil {
 			if chk.maxTime < mint {
 				// If any head chunk is truncated, we can truncate all mmapped chunks.
-				removedInOrder = chk.len() + len(s.mmappedChunks)
+				removedInOrder = s.headChunksLength + len(s.mmappedChunks)
 				s.firstChunkID += chunks.HeadChunkID(removedInOrder)
 				if i == 0 {
 					// This is the first chunk on the list so we need to remove the entire list.
 					s.headChunks = nil
+					s.headChunksLength = 0
 				} else {
 					// This is NOT the first chunk, unlink it from parent.
 					nextChk.prev = nil
+					s.headChunksLength--
 				}
 				s.mmappedChunks = nil
 				break
 			}
 			nextChk = chk
 			chk = chk.prev
+			s.headChunksLength++
 			i++
 		}
 	}

@@ -215,7 +215,7 @@ func (h *headIndexReader) Series(ref storage.SeriesRef, builder *labels.ScratchB
 	if s.headChunks != nil {
 		var maxTime int64
 		var i, j int
-		for i = s.headChunks.len() - 1; i >= 0; i-- {
+		for i = s.headChunksLength - 1; i >= 0; i-- {
 			chk := s.headChunks.atOffset(i)
 			if i == 0 {
 				// Set the head chunk as open (being appended to) for the first headChunk.
@@ -415,7 +415,7 @@ func (s *memSeries) chunk(id chunks.HeadChunkID, chunkDiskMapper *chunks.ChunkDi
 
 	var headChunksLen int
 	if s.headChunks != nil {
-		headChunksLen = s.headChunks.len()
+		headChunksLen = s.headChunksLength
 	}
 
 	if ix < 0 || ix > len(s.mmappedChunks)+headChunksLen-1 {
@@ -691,7 +691,7 @@ func (s *memSeries) iterator(id chunks.HeadChunkID, c chunkenc.Chunk, isoState *
 		ix -= len(s.mmappedChunks)
 		if s.headChunks != nil {
 			// Iterate all head chunks from the oldest to the newest.
-			headChunksLen := s.headChunks.len()
+			headChunksLen := s.headChunksLength
 			for j := headChunksLen - 1; j >= 0; j-- {
 				chk := s.headChunks.atOffset(j)
 				chkSamples := chk.chunk.NumSamples()

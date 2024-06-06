@@ -1094,7 +1094,7 @@ func TestMemSeries_truncateChunks_scenarios(t *testing.T) {
 
 			if tc.headChunks > 0 {
 				require.NotNil(t, series.headChunks, "head chunk is missing")
-				require.Equal(t, tc.headChunks, series.headChunks.len(), "wrong number of head chunks")
+				require.Equal(t, tc.headChunks, series.headChunksLength, "wrong number of head chunks")
 			} else {
 				require.Nil(t, series.headChunks, "head chunk is present")
 			}
@@ -1107,7 +1107,7 @@ func TestMemSeries_truncateChunks_scenarios(t *testing.T) {
 
 			if tc.expectedHead > 0 {
 				require.NotNil(t, series.headChunks, "headChunks should is nil after truncation")
-				require.Equal(t, tc.expectedHead, series.headChunks.len(), "wrong number of head chunks after truncation")
+				require.Equal(t, tc.expectedHead, series.headChunksLength, "wrong number of head chunks after truncation")
 				require.Nil(t, series.headChunks.oldest().prev, "last head chunk cannot have any next chunk set")
 			} else {
 				require.Nil(t, series.headChunks, "headChunks should is non-nil after truncation")
@@ -4226,7 +4226,7 @@ func testHistogramStaleSampleHelper(t *testing.T, floatHistogram bool) {
 	s := head.series.getByHash(l.Hash(), l)
 	require.NotNil(t, s)
 	require.NotNil(t, s.headChunks)
-	require.Equal(t, 1, s.headChunks.len())
+	require.Equal(t, 1, s.headChunksLength)
 	require.Empty(t, s.mmappedChunks)
 	testQuery(1)
 
@@ -4261,7 +4261,7 @@ func testHistogramStaleSampleHelper(t *testing.T, floatHistogram bool) {
 	s = head.series.getByHash(l.Hash(), l)
 	require.NotNil(t, s)
 	require.NotNil(t, s.headChunks)
-	require.Equal(t, 1, s.headChunks.len())
+	require.Equal(t, 1, s.headChunksLength)
 	require.Len(t, s.mmappedChunks, 1)
 	testQuery(2)
 }
@@ -4408,7 +4408,7 @@ func TestAppendingDifferentEncodingToSameSeries(t *testing.T) {
 		require.NoError(t, err)
 		require.False(t, created)
 		require.NotNil(t, ms)
-		require.Equal(t, count, ms.headChunks.len())
+		require.Equal(t, count, ms.headChunksLength)
 	}
 
 	appends := []struct {

@@ -218,7 +218,7 @@ func TestMemSeries_chunk(t *testing.T) {
 			setup: func(t *testing.T, s *memSeries, cdm *chunks.ChunkDiskMapper) {
 				appendSamples(t, s, 0, chunkRange, cdm)
 				require.Empty(t, s.mmappedChunks, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, int64(0), s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, chunkRange-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 				s.firstChunkID = 5
@@ -231,7 +231,7 @@ func TestMemSeries_chunk(t *testing.T) {
 			setup: func(t *testing.T, s *memSeries, cdm *chunks.ChunkDiskMapper) {
 				appendSamples(t, s, 0, chunkRange, cdm)
 				require.Empty(t, s.mmappedChunks, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, int64(0), s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, chunkRange-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 			},
@@ -243,7 +243,7 @@ func TestMemSeries_chunk(t *testing.T) {
 			setup: func(t *testing.T, s *memSeries, cdm *chunks.ChunkDiskMapper) {
 				appendSamples(t, s, 0, chunkRange, cdm)
 				require.Empty(t, s.mmappedChunks, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, int64(0), s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, chunkRange-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 			},
@@ -255,7 +255,7 @@ func TestMemSeries_chunk(t *testing.T) {
 			setup: func(t *testing.T, s *memSeries, cdm *chunks.ChunkDiskMapper) {
 				appendSamples(t, s, 0, chunkRange, cdm)
 				require.Empty(t, s.mmappedChunks, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, int64(0), s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, chunkRange-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 			},
@@ -268,7 +268,7 @@ func TestMemSeries_chunk(t *testing.T) {
 				appendSamples(t, s, 0, chunkRange*4, cdm)
 				s.mmapChunks(cdm)
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, chunkRange*3, s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*4)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 			},
@@ -281,7 +281,7 @@ func TestMemSeries_chunk(t *testing.T) {
 				appendSamples(t, s, 0, chunkRange*4, cdm)
 				s.mmapChunks(cdm)
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, chunkRange*3, s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*4)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 			},
@@ -294,7 +294,7 @@ func TestMemSeries_chunk(t *testing.T) {
 				appendSamples(t, s, 0, chunkRange*4, cdm)
 				s.mmapChunks(cdm)
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, chunkRange*3, s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*4)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 			},
@@ -307,7 +307,7 @@ func TestMemSeries_chunk(t *testing.T) {
 				appendSamples(t, s, 0, chunkRange*4, cdm)
 				s.mmapChunks(cdm)
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, chunkRange*3, s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*4)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 				s.headChunks = nil
@@ -321,7 +321,7 @@ func TestMemSeries_chunk(t *testing.T) {
 				appendSamples(t, s, 0, chunkRange*4, cdm)
 				s.mmapChunks(cdm)
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, chunkRange*3, s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*4)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 				s.headChunks = nil
@@ -335,7 +335,7 @@ func TestMemSeries_chunk(t *testing.T) {
 				appendSamples(t, s, 0, chunkRange*4, cdm)
 				s.mmapChunks(cdm)
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, chunkRange*3, s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*4)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 				s.headChunks = nil
@@ -349,7 +349,7 @@ func TestMemSeries_chunk(t *testing.T) {
 				appendSamples(t, s, 0, chunkRange*4, cdm)
 				s.mmapChunks(cdm)
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, chunkRange*3, s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*4)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 				cdm.Close()
@@ -363,7 +363,7 @@ func TestMemSeries_chunk(t *testing.T) {
 				appendSamples(t, s, 0, chunkRange*4, cdm)
 				s.mmapChunks(cdm)
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, chunkRange*3, s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*4)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 				cdm.Close()
@@ -376,7 +376,7 @@ func TestMemSeries_chunk(t *testing.T) {
 			setup: func(t *testing.T, s *memSeries, cdm *chunks.ChunkDiskMapper) {
 				appendSamples(t, s, 0, chunkRange*3, cdm)
 				require.Empty(t, s.mmappedChunks, "wrong number of mmappedChunks")
-				require.Equal(t, 3, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 3, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, int64(0), s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*3)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 			},
@@ -388,7 +388,7 @@ func TestMemSeries_chunk(t *testing.T) {
 			setup: func(t *testing.T, s *memSeries, cdm *chunks.ChunkDiskMapper) {
 				appendSamples(t, s, 0, chunkRange*3, cdm)
 				require.Empty(t, s.mmappedChunks, "wrong number of mmappedChunks")
-				require.Equal(t, 3, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 3, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, int64(0), s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*3)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 			},
@@ -400,7 +400,7 @@ func TestMemSeries_chunk(t *testing.T) {
 			setup: func(t *testing.T, s *memSeries, cdm *chunks.ChunkDiskMapper) {
 				appendSamples(t, s, 0, chunkRange*3, cdm)
 				require.Empty(t, s.mmappedChunks, "wrong number of mmappedChunks")
-				require.Equal(t, 3, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 3, s.headChunksLength, "wrong number of headChunks")
 				require.Equal(t, int64(0), s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*3)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
 			},
@@ -413,10 +413,10 @@ func TestMemSeries_chunk(t *testing.T) {
 				appendSamples(t, s, 0, chunkRange*4, cdm)
 				s.mmapChunks(cdm)
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 
 				appendSamples(t, s, chunkRange*4, chunkRange*6, cdm)
-				require.Equal(t, 3, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 3, s.headChunksLength, "wrong number of headChunks")
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
 				require.Equal(t, chunkRange*3, s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*6)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
@@ -430,10 +430,10 @@ func TestMemSeries_chunk(t *testing.T) {
 				appendSamples(t, s, 0, chunkRange*4, cdm)
 				s.mmapChunks(cdm)
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 
 				appendSamples(t, s, chunkRange*4, chunkRange*6, cdm)
-				require.Equal(t, 3, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 3, s.headChunksLength, "wrong number of headChunks")
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
 				require.Equal(t, chunkRange*3, s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*6)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
@@ -447,10 +447,10 @@ func TestMemSeries_chunk(t *testing.T) {
 				appendSamples(t, s, 0, chunkRange*4, cdm)
 				s.mmapChunks(cdm)
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 
 				appendSamples(t, s, chunkRange*4, chunkRange*6, cdm)
-				require.Equal(t, 3, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 3, s.headChunksLength, "wrong number of headChunks")
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
 				require.Equal(t, chunkRange*3, s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*6)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
@@ -464,10 +464,10 @@ func TestMemSeries_chunk(t *testing.T) {
 				appendSamples(t, s, 0, chunkRange*4, cdm)
 				s.mmapChunks(cdm)
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 
 				appendSamples(t, s, chunkRange*4, chunkRange*6, cdm)
-				require.Equal(t, 3, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 3, s.headChunksLength, "wrong number of headChunks")
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
 				require.Equal(t, chunkRange*3, s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*6)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
@@ -481,10 +481,10 @@ func TestMemSeries_chunk(t *testing.T) {
 				appendSamples(t, s, 0, chunkRange*4, cdm)
 				s.mmapChunks(cdm)
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 
 				appendSamples(t, s, chunkRange*4, chunkRange*6, cdm)
-				require.Equal(t, 3, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 3, s.headChunksLength, "wrong number of headChunks")
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
 				require.Equal(t, chunkRange*3, s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*6)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")
@@ -499,10 +499,10 @@ func TestMemSeries_chunk(t *testing.T) {
 				appendSamples(t, s, 0, chunkRange*4, cdm)
 				s.mmapChunks(cdm)
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
-				require.Equal(t, 1, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 1, s.headChunksLength, "wrong number of headChunks")
 
 				appendSamples(t, s, chunkRange*4, chunkRange*6, cdm)
-				require.Equal(t, 3, s.headChunks.len(), "wrong number of headChunks")
+				require.Equal(t, 3, s.headChunksLength, "wrong number of headChunks")
 				require.Len(t, s.mmappedChunks, 3, "wrong number of mmappedChunks")
 				require.Equal(t, chunkRange*3, s.headChunks.oldest().minTime, "wrong minTime on last headChunks element")
 				require.Equal(t, (chunkRange*6)-chunkStep, s.headChunks.maxTime, "wrong maxTime on first headChunks element")

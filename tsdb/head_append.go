@@ -1176,6 +1176,7 @@ func (s *memSeries) appendHistogram(t int64, h *histogram.Histogram, appendID ui
 		maxTime: t,
 		prev:    s.headChunks,
 	}
+	s.headChunksLength++
 	s.nextAt = rangeForTimestamp(t, o.chunkRange)
 	return true, true
 }
@@ -1233,6 +1234,7 @@ func (s *memSeries) appendFloatHistogram(t int64, fh *histogram.FloatHistogram, 
 		maxTime: t,
 		prev:    s.headChunks,
 	}
+	s.headChunksLength++
 	s.nextAt = rangeForTimestamp(t, o.chunkRange)
 	return true, true
 }
@@ -1406,6 +1408,7 @@ func (s *memSeries) cutNewHeadChunk(mint int64, e chunkenc.Encoding, chunkRange 
 		maxTime: math.MinInt64,
 		prev:    s.headChunks,
 	}
+	s.headChunksLength++
 
 	if chunkenc.IsValidEncoding(e) {
 		var err error
@@ -1470,7 +1473,7 @@ func (s *memSeries) mmapChunks(chunkDiskMapper *chunks.ChunkDiskMapper) (count i
 	// Write chunks starting from the oldest one and stop before we get to current s.headChunks.
 	// If we have this chain: s.headChunks{t4} -> t3 -> t2 -> t1 -> t0
 	// then we need to write chunks t0 to t3, but skip s.headChunks.
-	for i := s.headChunks.len() - 1; i > 0; i-- {
+	for i := s.headChunksLength - 1; i > 0; i-- {
 		chk := s.headChunks.atOffset(i)
 		chunkRef := chunkDiskMapper.WriteChunk(s.ref, chk.minTime, chk.maxTime, chk.chunk, false, handleChunkWriteError)
 		s.mmappedChunks = append(s.mmappedChunks, &mmappedChunk{
@@ -1484,6 +1487,7 @@ func (s *memSeries) mmapChunks(chunkDiskMapper *chunks.ChunkDiskMapper) (count i
 
 	// Once we've written out all chunks except s.headChunks we need to unlink these from s.headChunk.
 	s.headChunks.prev = nil
+	s.headChunksLength = 1
 
 	return count
 }
